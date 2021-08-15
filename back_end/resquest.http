@@ -1,0 +1,52 @@
+POST http://localhost:9000/api/v3/login
+Content-Type: application/json
+
+{
+    "loginName": "dungh",
+    "password": "123456"
+}
+
+###
+
+GET http://localhost:9000/api/v3/user/list?search=teo&page=0&pageSize=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE3YjFmYzUyMTIzMzU2Y2UwMTIxODUiLCJpYXQiOjE2MjkwMzAzMDIsImV4cCI6MTYyOTAzMzkwMn0.vScQh7d1Zv4QY_VquRw_ubvjEbT0UwKMIfQEhEz-6e4
+
+
+###
+
+GET http://localhost:9000/api/v3/user/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE3YjFmYzUyMTIzMzU2Y2UwMTIxODUiLCJpYXQiOjE2MjkwMzAzMDIsImV4cCI6MTYyOTAzMzkwMn0.vScQh7d1Zv4QY_VquRw_ubvjEbT0UwKMIfQEhEz-6e4
+
+###
+
+POST http://localhost:9000/api/v3/register
+Content-Type: application/json
+
+{
+    "name": "Hoang",
+    "loginName": "dungh12345",
+    "password": "123456"
+}
+
+###
+
+GET http://localhost:9000/api/v3/category/list?page=0&pageSize=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE4ZTMxZDQ1NGU0ZGFhZjAxZWE5MDEiLCJpYXQiOjE2MjkwNTEyODUsImV4cCI6MTYyOTA1NDg4NX0.x0LL4cuibQfsXinG2Q2ZQE4UOOu2cMF8A-ePJ4k72qQ
+
+###
+
+POST http://localhost:9000/api/v3/category
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE4ZTMxZDQ1NGU0ZGFhZjAxZWE5MDEiLCJpYXQiOjE2MjkwNTEyODUsImV4cCI6MTYyOTA1NDg4NX0.x0LL4cuibQfsXinG2Q2ZQE4UOOu2cMF8A-ePJ4k72qQ
+
+{
+    "name": "Sacom"
+}
+
+###
+
+DELETE http://localhost:9000/api/v3/category/611952f194667a7ad452cbdf
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE4ZTMxZDQ1NGU0ZGFhZjAxZWE5MDEiLCJpYXQiOjE2MjkwNDgyNTMsImV4cCI6MTYyOTA1MTg1M30._jx1RKDyxE6BhuVOPeEk9jbdFcwAtpGyTTj3LqPM9UQ
+
+
