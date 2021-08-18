@@ -18,7 +18,7 @@ router.get("/list",verifyToken, function (req, res, next) {
     const db = client.db(dbName);
     const col = db.collection("user");
     // Get first two documents that match the query
-    col.find({name: {$regex: search?search.trim():'', $options: 'i'}}).limit(Number(pageSize)).skip(Number(pageSize*page)).toArray(function (err, docs) {
+    col.find({name: {$regex: search?search.trim():'', $options: 'i'}, deletedBy: 0}).limit(Number(pageSize)).skip(Number(pageSize*page)).toArray(function (err, docs) {
       assert.equal(null, err);
       // console.log(docs.length);
       res.json({errCode: null, errMessage: null, data: {totalCount: docs.length, listData: docs}});

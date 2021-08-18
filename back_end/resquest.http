@@ -30,23 +30,31 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:9000/api/v3/category/list?page=0&pageSize=10
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE4ZTMxZDQ1NGU0ZGFhZjAxZWE5MDEiLCJpYXQiOjE2MjkwNTEyODUsImV4cCI6MTYyOTA1NDg4NX0.x0LL4cuibQfsXinG2Q2ZQE4UOOu2cMF8A-ePJ4k72qQ
+GET http://localhost:9000/api/v3/folder?page=0&pageSize=10&parentId=611a888057bd5e6599ce5090&categoryId=611a73b97a60539c85af46c6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE4ZTMxZDQ1NGU0ZGFhZjAxZWE5MDEiLCJpYXQiOjE2MjkxMjg0OTQsImV4cCI6MTYyOTEzMjA5NH0.a4PyicHgIUapKNNLDXV7Sya7RtFRFEPQw3anty2deKg
 
 ###
 
-POST http://localhost:9000/api/v3/category
+GET http://localhost:9000/api/v3/folder/select_list
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE4ZTMxZDQ1NGU0ZGFhZjAxZWE5MDEiLCJpYXQiOjE2MjkxMjg0OTQsImV4cCI6MTYyOTEzMjA5NH0.a4PyicHgIUapKNNLDXV7Sya7RtFRFEPQw3anty2deKg
+
+###
+
+POST http://localhost:9000/api/v3/folder
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE4ZTMxZDQ1NGU0ZGFhZjAxZWE5MDEiLCJpYXQiOjE2MjkwNTEyODUsImV4cCI6MTYyOTA1NDg4NX0.x0LL4cuibQfsXinG2Q2ZQE4UOOu2cMF8A-ePJ4k72qQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE4ZTMxZDQ1NGU0ZGFhZjAxZWE5MDEiLCJpYXQiOjE2MjkxMjg0OTQsImV4cCI6MTYyOTEzMjA5NH0.a4PyicHgIUapKNNLDXV7Sya7RtFRFEPQw3anty2deKg
 
 {
-    "name": "Sacom"
+  "id": 0,
+  "name": "folder2.3",
+  "parentId": "611a888057bd5e6599ce5090",
+  "categoryId": "611a73b97a60539c85af46c6"
 }
 
 ###
 
-DELETE http://localhost:9000/api/v3/category/611952f194667a7ad452cbdf
+DELETE http://localhost:9000/api/v3/folder/611a88b057bd5e6599ce5093
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE4ZTMxZDQ1NGU0ZGFhZjAxZWE5MDEiLCJpYXQiOjE2MjkwNDgyNTMsImV4cCI6MTYyOTA1MTg1M30._jx1RKDyxE6BhuVOPeEk9jbdFcwAtpGyTTj3LqPM9UQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE4ZTMxZDQ1NGU0ZGFhZjAxZWE5MDEiLCJpYXQiOjE2MjkxMjg0OTQsImV4cCI6MTYyOTEzMjA5NH0.a4PyicHgIUapKNNLDXV7Sya7RtFRFEPQw3anty2deKg
 
 
