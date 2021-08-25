@@ -28,7 +28,7 @@ router.post("/", function (req, res, next) {
       assert.equal(null, err);
        
       if(docs.length===0) return res.status(401).json({errCode: 1, errMessage: 1});
-      const accessToken=jwt.sign({"userId": docs[0]._id}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '3600s'});
+      const accessToken=jwt.sign({"userId": docs[0]._id, "isAdmin": docs[0].isAdmin}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '3600s'});
       res.json({errCode: null, errMessage: null, data: {accessToken}});
     });
   });

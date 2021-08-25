@@ -1,9 +1,9 @@
-POST http://localhost:9000/api/v3/login
+POST http://localhost:9000/api/v3/account/login
 Content-Type: application/json
 
 {
-    "loginName": "dungh",
-    "password": "123456"
+    "loginName": "sang6085@gmail.com",
+    "password": "123"
 }
 
 ###
@@ -14,17 +14,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE3Y
 
 ###
 
-GET http://localhost:9000/api/v3/user/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE3YjFmYzUyMTIzMzU2Y2UwMTIxODUiLCJpYXQiOjE2MjkwMzAzMDIsImV4cCI6MTYyOTAzMzkwMn0.vScQh7d1Zv4QY_VquRw_ubvjEbT0UwKMIfQEhEz-6e4
+GET http://localhost:9000/api/v3/folder/select_list?parentId=0&page=0&pageSize=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTIzMjA1NWQ3MzExZjM1Njk2YWIxYTQiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjI5ODI3MDU3LCJleHAiOjE2Mjk4MzA2NTd9.g7YAj1C4w8NmbLySP86sh1_LWAze_sOe7jcmv-igKcM
 
 ###
 
-POST http://localhost:9000/api/v3/register
+POST http://localhost:9000/api/v3/account/register
 Content-Type: application/json
 
 {
-    "name": "Hoang",
-    "loginName": "dungh12345",
+    "name": "Sang Tran",
+    "loginName": "teonv",
     "password": "123456"
 }
 

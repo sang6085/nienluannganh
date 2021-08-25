@@ -12,24 +12,24 @@ router.use(express.json());
 /* GET home page. */
 router.get("/",verifyToken, function (req, res, next) {
   // Use connect method to connect to the Server
-  const {page, pageSize, search, parentId,categoryId}=req.query;
+  const {page, pageSize, search, parentId}=req.query;
   MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
     const db = client.db(dbName);
     const col = db.collection("tenant");
     // Get first two documents that match the query
     let totalCount=0;
-    col.find({createdBy: req.userId, deletedBy: 0,categoryId: categoryId, parentId: parentId==0? Number(parentId): parentId, createdDate: "16/08/2021"}).toArray(function (err, docs) {
+    col.find({createdBy: req.userId, deletedBy: 0, parentId: parentId==0? Number(parentId): parentId, createdDate: "16/08/2021"}).toArray(function (err, docs) {
       assert.equal(null, err);
       // console.log(docs.length);
       totalCount=docs.length;
     });
 
-    col.find({name: {$regex: search?search.trim():'', $options: 'i'}, createdBy: req.userId, deletedBy: 0,categoryId: categoryId, parentId: parentId==0? Number(parentId): parentId, createdDate: "16/08/2021"}).limit(Number(pageSize)).skip(Number(pageSize*page)).toArray(function (err, docs) {
+    col.find({name: {$regex: search?search.trim():'', $options: 'i'}, createdBy: req.userId, deletedBy: 0, parentId: parentId==0? Number(parentId): parentId, createdDate: "16/08/2021"}).limit(Number(pageSize)).skip(Number(pageSize*page)).toArray(function (err, docs) {
       assert.equal(null, err);
       // console.log(docs.length);
       const data=docs.map((item)=>{
-        return {id: item._id, name: item.name,categoryId:item.categoryId}
+        return {id: item._id, name: item.name}
       })
       res.json({errCode: null, errMessage: null, data: {totalCount, listData: data}});
       client.close();
@@ -68,7 +68,6 @@ router.post("/", verifyToken, function (req, res, next) {
          
             const createData={
                 name: req.body.name,
-                categoryId: req.body.categoryId,
                 parentId: req.body.parentId===undefined || req.body.parentId===0 ? 0 : req.body.parentId,
                 createdBy: req.userId,
                 createdDate: date,
@@ -86,7 +85,7 @@ router.post("/", verifyToken, function (req, res, next) {
         }
       else {
         // Modify and return the modified document
-    col.findOneAndUpdate({_id: objectId(req.body.id)}, {$set: {name: req.body.name, categoryId: req.body.categoryId, lastModifiedBy: req.userId, lastModifiedDate: date}}, {upsert: false
+    col.findOneAndUpdate({_id: objectId(req.body.id)}, {$set: {name: req.body.name, lastModifiedBy: req.userId, lastModifiedDate: date}}, {upsert: false
     }, function(err, r) {
       assert.equal(null, err);
       })

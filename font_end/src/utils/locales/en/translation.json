@@ -1,0 +1,217 @@
+{
+	"chooseplanbox": {
+		"get_started": "get started"
+	},
+	"dropzone": {
+		"or_click_to_select": "or click to select",
+		"drag_and_drop_supporting_file_here_to_upload": "Drag and drop supporting file here to upload"
+	},
+	"signup": {
+		"sign_up": "Sign up",
+		"first_name": "First name",
+		"last_name": "Last name",
+		"email_address": "Email address",
+		"password": "Password",
+		"retype_password": "Retype password",
+		"i_accept_the_terms_of_use_&_privacy_policy": "I accept the Terms of Use & Privacy Policy",
+		"already_have_an_account": "Already have an account? Sign in",
+		"push_noti": "Register successfully!!! 🎉",
+		"first_name_err_null": "Please enter your fisrt name",
+		"last_name_err_null": "Please enter your last name",
+		"email_err_null": "Please enter your email",
+		"email_err": "Please enter a valid email address",
+		"password_err_null": "Please enter your password",
+		"password_err": "Please enter at least 6 characters",
+		"re_password_err_null": "Please retype your password",
+		"re_password_err": "Password does not match",
+		"accept_err": "Please tick the terms"
+	},
+	"login": {
+		"sign_in": "Sign in",
+		"email_address": "Email address",
+		"password": "Password",
+		"remember_me": "Remember me",
+		"sign_in_with_google+": "Sign in with google+",
+		"forgot_password?": "Forgot password?",
+		"don't_have_an_account?": "Don't have an account?",
+		"the_password_field_is_required": "The password field is required",
+		"the_email_field_is_required": "The email field is required",
+		"please_enter_a_valid_email_address": "Please enter a valid email address"
+	},
+	"chooseplanpage": {
+		"choose_your_subscription_plan": "Choose your subscription plan"
+	},
+	"dashboard": {
+		"storage": "Storage",
+		"choose_new_plan": "Choose new plan",
+		"recent_document": "Recent document",
+		"favorite_document": "Favorite document",
+		"reference_document": "Reference document"
+	},
+	"header": {
+		"dashboard": "Dashboard",
+		"document": "Document",
+		"license": "License",
+		"tenant": "Tenant",
+		"category": "Category",
+		"file_manager": "File Manager",
+		"hello": "Hello!"
+	},
+	"sidebar": {
+		"dashboard": "Dashboard",
+		"document": "Document",
+		"license": "License",
+		"tenant": "Tenant",
+		"category": "Category"
+	},
+	"translation": {
+		"language": "Language",
+		"english": "English",
+		"vietnamese": "Vietnamese"
+	},
+	"filemanager": {
+		"action": "Action",
+		"name": "Name",
+		"file_size": "File Size",
+		"created_date": "Created Date",
+		"modified_date": "Modified Date",
+		"file_uploaded_successfully": "File(s) uploaded successfully"
+	},
+	"renameFile": {
+		"rename_file": "Rename File",
+		"renamed_file": "Renamed File",
+		"save": "Save",
+		"name": "Name",
+		"the_name_field_is_required": "The name field is required"
+	},
+	"createDocument": {
+		"new_folder": "New folder",
+		"name": "Name",
+		"category": "Category",
+		"rename_folder": "Rename folder",
+		"document_created": "Document Created!",
+		"document_error": "Can't create the document!",
+		"document_update": "The document has been updated!",
+		"document_error_update": "Can't update the document!",
+		"the_name_field_is_required": "The name field is required",
+		"please_select_a_category": "Please select a category"
+	},
+	"document": {
+		"search": "Search",
+		"category": "Category",
+		"from_date": "From date",
+		"to_date": "To date",
+		"clear": "Clear",
+		"action": "Action",
+		"name": "Name",
+		"created_date": "Created date",
+		"created_by": "Created by",
+		"rows_per_page": "Rows per page",
+		"jump_to_page": "Jump to page",
+		"display_rows": "Of",
+		"favorite": "Favorite",
+		"no_match": "Sorry, there is no data on page."
+	},
+	"createCategory": {
+		"name": "Name",
+		"description": "Description",
+		"create_category": "Create Category",
+		"edit_category": "Edit Category"
+	},
+	"category": {
+		"search": "Search",
+		"name": "Name",
+		"from_date": "From date",
+		"to_date": "To date",
+		"clear": "Clear",
+		"action": "Action",
+		"description": "Description",
+		"created_date": "Created date",
+		"created_by": "Created by",
+		"rows_per_page": "Rows per page",
+		"jump_to_page": "Jump to page",
+		"display_rows": "Of"
+	},
+	"license": {
+		"search": "Search",
+		"from_date": "From date",
+		"to_date": "To date",
+		"clear": "Clear",
+		"action": "Action",
+		"description": "Description",
+		"rows_per_page": "Rows per page",
+		"jump_to_page": "Jump to page",
+		"display_rows": "Of",
+		"day": "Day",
+		"month": "Month",
+		"year": "Year",
+		"storage_size": "Storage size",
+		"price": "Price",
+		"name": "Name",
+		"number": "Number"
+	},
+	"createLicense": {
+		"create_license": "Create License",
+		"edit_license": "Edit License",
+		"license_created": "License created!",
+		"license_updated": "License updated!",
+		"license_error": "License error",
+		"the_number_field_is_required": "The number field is required",
+		"the_name_field_is_required": "The name field is required",
+		"day_must_specify_a_number": "Day must specify a number",
+		"day_must_be_greater_than_or_equal_to_0": "Day must be greater than or equal to 0",
+		"day_must_be_an_integer": "Day must be an integer",
+		"month_must_specify_a_number": "Month must specify a number",
+		"month_must_be_greater_than_or_equal_to_0": "Month must be greater than or equal to 0",
+		"month_must_be_an_integer": "Month must be an integer",
+		"year_must_specify_a_number": "Year must specify a number",
+		"year_must_be_greater_than_or_equal_to_0": "Year must be greater than or equal to 0",
+		"year_must_be_an_integer": "Year must be an integer",
+		"price_must_specify_a_number": "Price must specify a number",
+		"price_must_be_greater_than_or_equal_to_0": "Price must be greater than or equal to 0",
+		"storage_size_must_specify_a_number": "Storage size must specify a number",
+		"storage_size_must_be_greater_than_or_equal_to_0": "Storage size must be greater than or equal to 0",
+		"day": "Day",
+		"month": "Month",
+		"year": "Year",
+		"storage_size": "Storage size",
+		"price": "Price",
+		"name": "Name",
+		"number": "Number"
+	},
+	"tenant": {
+		"search": "Search",
+		"name": "Name",
+		"login_name": "Login name",
+		"from_date": "From date",
+		"to_date": "To date",
+		"clear": "Clear",
+		"rows_per_page": "Rows per page",
+		"jump_to_page": "Jump to page",
+		"display_rows": "Of",
+		"action": "Action",
+		"no_match": "Sorry, there is no data on page.",
+		"password_err_null": "Please enter your password",
+		"password_err": "Please enter at least 6 characters",
+		"the_name_field_is_required": "The name field is required",
+		"the_loginName_field_is_required": "The login name field is required",
+		"re_password_err_null": "Please retype your password",
+		"create_tenant": "Tenant Created!",
+		"create_tenant_error": "Can't create the tenant!"
+	},
+	"createUser": {
+		"name": "Name",
+		"login_name": "Login name",
+		"password": "Password",
+		"retype_password": "Retype password",
+		"add_user": "Add User"
+	},
+	"confirmDelete": {
+		"are_you_sure": "Are you sure?",
+		"you_wont_be_able_to_revert_this": "You won't be able to revert this!",
+		"deleted": "Deleted!",
+		"your_file_has_been_deleted": "Your file has been deleted.",
+		"yes": "Yes",
+		"cancel": "Cancel"
+	}
+}

@@ -110,7 +110,7 @@ const LoginPage: React.FC = () => {
 	return (
 		<Container maxWidth="xs">
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<Grid container justify="center">
+				<Grid container alignItems="center">
 					<Grid item xs={12}>
 						{isSubmitting && <LinearProgress className={classes.progress} />}
 						<Grid container justify="center">

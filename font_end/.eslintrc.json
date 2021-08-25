@@ -1,0 +1,53 @@
+{
+	"env": {
+		"browser": false,
+		"es6": true
+	},
+	"extends": [
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended",
+		"plugin:react-hooks/recommended",
+		"prettier"
+	],
+	"plugins": ["react", "@typescript-eslint"],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 2018,
+		"sourceType": "module",
+		"project": "./tsconfig.json"
+	},
+	"rules": {
+		"no-console": 1,
+		"no-eval": 1,
+		"no-empty-function": 0,
+		"@typescript-eslint/no-explicit-any": 0,
+		"@typescript-eslint/explicit-module-boundary-types": 0,
+		"@typescript-eslint/no-empty-function": 0,
+		"react/prop-types": 0,
+		"react/react-in-jsx-scope": 0,
+		"react-hooks/exhaustive-deps": 2,
+		"react-hooks/rules-of-hooks": 1,
+		"prettier/prettier": [
+			"error",
+			{
+				"endOfLine": "auto",
+				"printWidth": 100,
+				"useTabs": true,
+				"tabWidth": 2
+			}
+		],
+		"@typescript-eslint/ban-types": [
+			"error",
+			{
+				"types": {
+					"object": false,
+					"{}": false
+				},
+				"extendDefaults": true
+			}
+		]
+	}
+}
