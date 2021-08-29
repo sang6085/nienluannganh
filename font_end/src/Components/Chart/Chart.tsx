@@ -27,11 +27,15 @@ const Chart: React.FC<ChartProps> = (props) => {
 						}`,
 					})}
 				>
-					<Box style={{ fontSize: '2.5vw', marginTop: '2vw' }}>
-						<Box fontWeight="fontWeightBold">{`${value}/${totalCapacity}`}</Box>
+					<Box style={{ fontSize: '2.5vw', marginTop: '1vw', color: 'blue' }}>
+						{/* <Box fontWeight="fontWeightBold">{`${value}/${totalCapacity}`}</Box>
 						<Box fontWeight="fontWeightBold" textAlign="center">
 							GB
-						</Box>
+						</Box> */}
+						{(Number(usedCapacity) / Number(totalCapacity)) * 100 > 100
+							? '100.0%'
+							: ((Number(usedCapacity) / Number(totalCapacity)) * 100).toFixed(1) + '%'}
+						{/* {((Number(usedCapacity) / Number(totalCapacity)) * 100).toFixed(1)}% */}
 					</Box>
 				</CircularProgressbarWithChildren>
 			)}

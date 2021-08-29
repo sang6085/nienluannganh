@@ -2,20 +2,20 @@ POST http://localhost:9000/api/v3/account/login
 Content-Type: application/json
 
 {
-    "loginName": "sang6085@gmail.com",
+    "loginName": "sang2@gmail",
     "password": "123"
 }
 
 ###
 
-GET http://localhost:9000/api/v3/user/list?search=teo&page=0&pageSize=10
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTE3YjFmYzUyMTIzMzU2Y2UwMTIxODUiLCJpYXQiOjE2MjkwMzAzMDIsImV4cCI6MTYyOTAzMzkwMn0.vScQh7d1Zv4QY_VquRw_ubvjEbT0UwKMIfQEhEz-6e4
+GET http://localhost:9000/api/v3/account/select_list?page=0&pageSize=15&search
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTI3NzdiMTc4NWE2NDg1ZGJmZDZjMjMiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjMwMTUyODA0LCJleHAiOjE2MzAxNTY0MDR9.HvMFalQ2XdbCO8hjCNsYJOjQu9j1fl6IDn0yxuR4Eag
 
 
 ###
 
-GET http://localhost:9000/api/v3/folder/select_list?parentId=0&page=0&pageSize=10
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTIzMjA1NWQ3MzExZjM1Njk2YWIxYTQiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjI5ODI3MDU3LCJleHAiOjE2Mjk4MzA2NTd9.g7YAj1C4w8NmbLySP86sh1_LWAze_sOe7jcmv-igKcM
+GET http://localhost:9000/api/v3/folder/select_list?parentId=0&page=0&pageSize=100
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTIzMjA1NWQ3MzExZjM1Njk2YWIxYTQiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjI5ODk2ODA3LCJleHAiOjE2Mjk5MDA0MDd9.IWx4yyv8Dwr20K4HVT601LNScrVOW4ii_HmS3-LS3Qk
 
 ###
 

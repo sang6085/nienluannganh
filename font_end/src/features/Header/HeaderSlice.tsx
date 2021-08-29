@@ -1,14 +1,15 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
-
+const title = (value: any) => {
+	return value.substring(0, value.indexOf('/'));
+};
 export const HeaderSlice = createSlice({
 	name: 'HeaderSlice',
-	initialState: location.pathname.substring(1),
+	initialState: title(location.pathname.substring(1)),
 	// The `reducers` field lets us define reducers and generate associated actions
 	reducers: {
 		updateTitleHeader: (state, action: any) => {
 			state = action.payload;
-
 			return state;
 		},
 	},

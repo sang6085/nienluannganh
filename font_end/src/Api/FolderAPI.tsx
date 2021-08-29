@@ -21,3 +21,9 @@ export const FolderDelete = (id: string) => {
 	});
 	return response;
 };
+export const TreeviewGet = (id: any) => {
+	const response = callApi('GET', `/api/v3/folder/treeview/${id}`).then((res) => {
+		return res;
+	});
+	return response;
+};

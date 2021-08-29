@@ -55,7 +55,8 @@
 		"tenant": "Tenant",
 		"category": "Category",
 		"file_manager": "File Manager",
-		"hello": "Hello!"
+		"hello": "Hello!",
+		"user": "User"
 	},
 	"sidebar": {
 		"dashboard": "Dashboard",
@@ -110,7 +111,13 @@
 		"jump_to_page": "Jump to page",
 		"display_rows": "Of",
 		"favorite": "Favorite",
-		"no_match": "Sorry, there is no data on page."
+		"no_match": "Sorry, there is no data on page.",
+		"create_folder": "Create folder",
+		"upload_file": "Upload file",
+		"file": "File",
+		"folder": "Folder",
+		"save": "save",
+		"cancel": "cancel"
 	},
 	"createCategory": {
 		"name": "Name",
@@ -197,7 +204,19 @@
 		"the_loginName_field_is_required": "The login name field is required",
 		"re_password_err_null": "Please retype your password",
 		"create_tenant": "Tenant Created!",
-		"create_tenant_error": "Can't create the tenant!"
+		"create_tenant_error": "Can't create the tenant!",
+		"updated_successfully": "Updated successfully",
+		"edit": "Edit",
+		"delete": "Delete",
+		"license_name": "License Name",
+		"bought_date": "Bought Date",
+		"expired_date": "Expired Date",
+		"save": "Save",
+		"create_new": "Create New",
+		"created_successfully": "Created successfully",
+		"download": "Download",
+		"log_out": "Logout",
+		"profile": "Profile"
 	},
 	"createUser": {
 		"name": "Name",

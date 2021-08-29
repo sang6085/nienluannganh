@@ -22,6 +22,7 @@ import * as yup from 'yup';
 import { LoginPost } from '../../Api/LoginAPI';
 import { toast } from 'react-toastify';
 import Message from '../../Notifi/Message';
+import jwtDecode from 'jwt-decode';
 
 function Copyright() {
 	return (
@@ -75,7 +76,13 @@ const Login: React.FC = () => {
 		const response = await LoginPost({ loginName: data.loginName, password: data.password });
 		if (response?.errorCode === null) {
 			window.localStorage.setItem('token', response.data.accessToken || '');
-			history.push(`${AppURL.DASHBOARD}`);
+			const token: any = response.data.accessToken;
+			const checkToken: any = jwtDecode(token);
+			if (checkToken.isAdmin) {
+				history.push(`${AppURL.USER}`);
+			} else {
+				history.push(`${AppURL.DASHBOARD}`);
+			}
 		} else if (response?.errorCode === 1) {
 			toast.error('Tai khoan ko chinh xac');
 		}

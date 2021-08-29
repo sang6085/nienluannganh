@@ -63,8 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Register: React.FC = () => {
 	const classes = useStyles();
 	const schema = yup.object().shape({
-		firstName: yup.string().required('firstName la bat buoc'),
-		lastName: yup.string().required('lastName la bat buoc'),
+		name: yup.string().required('name la bat buoc'),
 		loginName: yup.string().required('lastName la bat buoc'),
 		password: yup.string().required('password la bat buoc'),
 		retypePassword: yup
@@ -84,7 +83,7 @@ const Register: React.FC = () => {
 	const history = useHistory();
 	const onSubmit = async (data: any) => {
 		const user = {
-			name: data.firstName + ' ' + data.lastName,
+			name: data.name,
 			loginName: data.loginName,
 			password: data.password,
 		};
@@ -115,34 +114,19 @@ const Register: React.FC = () => {
 				</Grid>
 
 				<Grid container spacing={2}>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={12}>
 						<TextField
-							{...register('firstName')}
+							{...register('name')}
 							variant="outlined"
 							disabled={false}
-							label="First Name"
+							label="Name"
 							type="text"
-							id="firstName"
-							name="firstName"
-							placeholder="First Name"
+							id="name"
+							name="name"
+							placeholder="Name"
 							fullWidth={true}
-							error={errors.firstName ? true : false}
-							helperText={errors.firstName?.message}
-						/>
-					</Grid>
-					<Grid item xs={12} sm={6}>
-						<TextField
-							{...register('lastName')}
-							variant="outlined"
-							disabled={false}
-							label="Last Name"
-							type="text"
-							id="lastName"
-							name="lastName"
-							placeholder="Last Name"
-							fullWidth={true}
-							error={errors.lastName ? true : false}
-							helperText={errors.lastName?.message}
+							error={errors.name ? true : false}
+							helperText={errors.name?.message}
 						/>
 					</Grid>
 					<Grid item xs={12}>

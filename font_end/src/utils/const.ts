@@ -8,4 +8,5 @@ export const AppURL = {
 	CATEGORYLIST: '/category',
 	LICENSE: '/license',
 	TENANT: '/tenant',
+	USER: '/user',
 };

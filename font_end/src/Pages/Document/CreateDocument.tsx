@@ -15,6 +15,8 @@ import * as yup from 'yup';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { FolderPost } from '../../Api/FolderAPI';
 import { RenameFilePost } from '../../Api/FileAPI';
+import Message from '../../Notifi/Message';
+import { toast } from 'react-toastify';
 
 const Copyright = () => {
 	return (
@@ -82,15 +84,19 @@ const CreateDocument: React.FC<CreateDocumentProps> = (props) => {
 			const post = await RenameFilePost(data);
 			if (post?.errorCode === null) {
 				props?.flag?.(true);
-				console.log('thanh cong');
+				toast.info(tr('tenant.updated_successfully'));
 			} else {
 				console.log('that bai');
 			}
 		} else {
 			const post = await FolderPost(data);
 			if (post?.errorCode === null) {
+				if (data.id === 0) {
+					toast.info(tr('tenant.created_successfully'));
+				} else {
+					toast.info(tr('tenant.updated_successfully'));
+				}
 				props?.flag?.(true);
-				console.log('thanh cong');
 			} else {
 				console.log('that bai');
 			}
@@ -111,6 +117,7 @@ const CreateDocument: React.FC<CreateDocumentProps> = (props) => {
 
 	return (
 		<Container component="main" maxWidth="xs">
+			<Message />
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<Grid container spacing={2}>
 					<Grid item xs={12}>
@@ -170,7 +177,7 @@ const CreateDocument: React.FC<CreateDocumentProps> = (props) => {
 							//className={classes.button}
 							startIcon={<SaveIcon />}
 						>
-							Save
+							{tr('document.save')}
 						</Button>
 						&nbsp;&nbsp;&nbsp;
 						<Button
@@ -180,7 +187,7 @@ const CreateDocument: React.FC<CreateDocumentProps> = (props) => {
 							//className={classes.button}
 							startIcon={<CancelIcon />}
 						>
-							Cancel
+							{tr('document.cancel')}
 						</Button>
 					</Grid>
 				</Grid>

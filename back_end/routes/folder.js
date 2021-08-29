@@ -23,7 +23,7 @@ router.get("/select_list", verifyToken, function (req, res, next) {
       .find({
         createdBy: req.userId,
         deletedBy: 0,
-        parentId: parentId == 0 ? '0' : parentId,
+        parentId: parentId == 0 ? "0" : parentId,
       })
       .toArray(function (err, docs) {
         assert.equal(null, err);
@@ -36,7 +36,7 @@ router.get("/select_list", verifyToken, function (req, res, next) {
         name: { $regex: search ? search.trim() : "", $options: "i" },
         createdBy: req.userId,
         deletedBy: 0,
-        parentId: parentId == 0 ? '0' : parentId,
+        parentId: parentId == 0 ? "0" : parentId,
       })
       .limit(Number(pageSize))
       .skip(Number(pageSize * page))
@@ -137,6 +137,39 @@ router.delete("/:id", verifyToken, function (req, res, next) {
       }
     );
     res.json({ errorCode: null, data: true });
+  });
+});
+router.get("/treeview/:id", verifyToken, function (req, res, next) {
+  //Use connect method to connect to the Server
+  var date = new Date().toLocaleDateString("en-GB");
+
+  MongoClient.connect(url, function (err, client) {
+    assert.equal(null, err);
+    const db = client.db(dbName);
+    const col = db.collection("folder");
+    // Remove and return a document
+    var parentId = req.params.id;
+    for (let i = 0; i <= 2; i++) {
+      //if (parentId === 0) break;
+      console.log(parentId);
+      col
+        .find({
+          createdBy: req.userId,
+          deletedBy: 0,
+          _id: objectId(parentId),
+        })
+        .toArray(function (err, docs) {
+          assert.equal(null, err);
+          // if (docs.length !== 0 && docs[0].parentId != 0) {
+          //   parentId = docs[0].parentId;
+          //   console.log(docs[0].name);
+          //   console.log(docs[0].parentId);
+          // }
+          parentId = 0;
+        });
+      // console.log(docs[0].name);
+      console.log(parentId);
+    }
   });
 });
 module.exports = router;

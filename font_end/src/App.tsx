@@ -13,6 +13,11 @@ import Document from './Pages/Document/Document';
 import Tenant from './Pages/Tenant/Tenant';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './utils/locales/i18n';
+import ChoosePlan from './Pages/ChoosePlan/ChoosePlan';
+import ChoosePlanLayout from './Layouts/ChoosePlanLayout/ChoosePlanLayout';
+import User from './Pages/User/User';
+import MainLayoutAdmin from './Layouts/MainLayoutAdmin';
+import License from './Pages/License/License';
 
 function App() {
 	const theme = createTheme({
@@ -56,7 +61,21 @@ function App() {
 								</Switch>
 							</MainLayout>
 						</Route>
-
+						<Route path={[AppURL.LICENSE, AppURL.USER]}>
+							<MainLayoutAdmin>
+								<Switch>
+									<Route path={AppURL.USER} component={User} />
+									<Route path={AppURL.LICENSE} component={License} />
+								</Switch>
+							</MainLayoutAdmin>
+						</Route>
+						<Route path={[AppURL.CHOOSEPLAN]}>
+							<ChoosePlanLayout>
+								<Switch>
+									<Route path={AppURL.CHOOSEPLAN} component={ChoosePlan} />
+								</Switch>
+							</ChoosePlanLayout>
+						</Route>
 						<Route path="*" component={NotFound} />
 					</Switch>
 				</Router>

@@ -1,4 +1,16 @@
-import { Avatar, Box, Button, Fade, Grid, ListItemAvatar, Menu, MenuItem } from '@material-ui/core';
+import {
+	Avatar,
+	Box,
+	Button,
+	Dialog,
+	DialogContent,
+	DialogTitle,
+	Fade,
+	Grid,
+	ListItemAvatar,
+	Menu,
+	MenuItem,
+} from '@material-ui/core';
 import React from 'react';
 import clsx from 'clsx';
 import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
@@ -23,13 +35,16 @@ import { AppURL } from '../utils/const';
 import logo from '../public/images/logo1.png';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import PolicyIcon from '@material-ui/icons/Policy';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { titleHeader, updateTitleHeader } from '../features/Header/HeaderSlice';
 import icon from '../public/images/english.svg';
 import iconvn from '../public/images/vietnamese.svg';
 import { useTranslation } from 'react-i18next';
 import { ProfileGet } from '../Api/ProfileAPI';
+import jwt_decode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
+import { Close } from '@material-ui/icons';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -72,6 +87,13 @@ const useStyles = makeStyles((theme: Theme) =>
 				easing: theme.transitions.easing.sharp,
 				duration: theme.transitions.duration.enteringScreen,
 			}),
+		},
+		closeButton: {
+			position: 'absolute',
+			top: theme.spacing(1),
+			right: theme.spacing(1),
+			color: theme.palette.grey[500],
+			zIndex: 1,
 		},
 		drawerClose: {
 			transition: theme.transitions.create('width', {
@@ -125,11 +147,11 @@ const MainLayout: React.FC = (props) => {
 	const items = [
 		{ text: 'dashboard', icon: <DashboardIcon />, url: AppURL.DASHBOARD },
 		{ text: 'document', icon: <AssignmentIcon />, url: '/document/0' },
-		{ text: 'tenant', icon: <PolicyIcon />, url: AppURL.TENANT },
+		// { text: 'tenant', icon: <PeopleAltIcon />, url: AppURL.TENANT },
 	];
 	const [item, setItem] = React.useState(icon);
 	const [valueI18n, setValueI18n] = React.useState('en');
-	const [profile, setProfile] = React.useState<string | undefined>('user name');
+	const [profile, setProfile] = React.useState<any | undefined>('user name');
 	React.useEffect(() => {
 		const i18nLng = window.localStorage.getItem('i18nextLng') || 'en';
 		if (i18nLng === 'en') {
@@ -142,7 +164,7 @@ const MainLayout: React.FC = (props) => {
 		const getDataProfile = async () => {
 			const response = await ProfileGet();
 			if (response?.errorCode === null) {
-				setProfile(response.data.name);
+				setProfile(response.data);
 			}
 		};
 		getDataProfile();
@@ -186,9 +208,34 @@ const MainLayout: React.FC = (props) => {
 		window.localStorage.getItem('token') && window.localStorage.removeItem('token');
 		setAnchorElProfile(null);
 	};
+	const token: any = window.localStorage.getItem('token');
+	const date = Date.now();
+	const handleCheckToken = (element: any) => {
+		if (token) {
+			const checkToken: any = jwtDecode(token);
+			if (checkToken.exp < date / 1000) {
+				localStorage.removeItem('token');
+				return <Redirect to={AppURL.LOGIN} />;
+			} else if (checkToken.isAdmin) {
+				return <Redirect to="404" />;
+			} else {
+				return element;
+			}
+		} else {
+			localStorage.removeItem('token');
+			return <Redirect to={AppURL.LOGIN} />;
+		}
+	};
+	const [openDialog, setOpenDialog] = React.useState(false);
+	const handleCloseDialog = () => {
+		setOpenDialog(false);
+	};
+	const handleOpenDialog = () => {
+		setOpenDialog(true);
+		setAnchorElProfile(null);
+	};
 	return (
 		<Box>
-			{window.localStorage.getItem('token') ? null : <Redirect to={`${AppURL.LOGIN}`} />}
 			<div className={classes.root}>
 				<CssBaseline />
 				<AppBar
@@ -261,7 +308,7 @@ const MainLayout: React.FC = (props) => {
 									onClick={handleClickProfile}
 								>
 									<ListItemAvatar>
-										<Avatar>{profile?.charAt(0)}</Avatar>
+										<Avatar>{profile.name?.charAt(0)}</Avatar>
 									</ListItemAvatar>
 									<div
 										style={{
@@ -271,7 +318,11 @@ const MainLayout: React.FC = (props) => {
 										}}
 									>
 										<div>{t('header.hello')}</div>
-										<div>{profile}</div>
+										<div>
+											<Typography variant="body2" noWrap>
+												{profile.name}
+											</Typography>
+										</div>
 									</div>
 								</ListItem>
 								<Menu
@@ -281,9 +332,8 @@ const MainLayout: React.FC = (props) => {
 									open={Boolean(anchorElProfile)}
 									onClose={handleCloseProfile}
 								>
-									<MenuItem onClick={handleCloseProfile}>Profile</MenuItem>
-									<MenuItem onClick={handleCloseProfile}>My account</MenuItem>
-									<MenuItem onClick={handleLogout}>Logout</MenuItem>
+									<MenuItem onClick={handleOpenDialog}>{t('tenant.profile')}</MenuItem>
+									<MenuItem onClick={handleLogout}>{t('tenant.log_out')}</MenuItem>
 								</Menu>
 							</Grid>
 						</Grid>
@@ -336,9 +386,29 @@ const MainLayout: React.FC = (props) => {
 				</Drawer>
 				<main className={classes.content}>
 					<div className={classes.toolbar} />
-					{props.children}
+
+					{handleCheckToken(props.children)}
 				</main>
 			</div>
+			<Dialog
+				//disableBackdropClick
+				//disableEscapeKeyDown
+				open={openDialog}
+				onClose={handleCloseDialog}
+				aria-labelledby="form-dialog-title"
+			>
+				<DialogTitle id="form-dialog-title">{t('tenant.profile')}</DialogTitle>
+				<IconButton className={classes.closeButton} onClick={handleCloseDialog}>
+					<Close />
+				</IconButton>
+				<DialogContent>
+					<Typography variant="body2">- Tên đăng nhập: {profile.name}</Typography>
+					<Typography variant="body2">- Tên đăng nhập: {profile.loginName}</Typography>
+					<Typography variant="body2">- Tên license: {profile.licenseName}</Typography>
+					<Typography variant="body2">- Ngày mua: {profile.boughtDate}</Typography>
+					<Typography variant="body2">- Ngày hết hạn: {profile.expiredDate}</Typography>
+				</DialogContent>
+			</Dialog>
 		</Box>
 	);
 };
