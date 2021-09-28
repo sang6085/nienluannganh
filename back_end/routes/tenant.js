@@ -90,6 +90,52 @@ router.post("/", verifyToken, function (req, res, next) {
       });
   });
 });
+router.post("/post", verifyToken, function (req, res, next) {
+  var dateNow = new Date().toLocaleDateString("en-GB");
+  const str = dateNow.split("/");
+  const date = new Date(str[2], str[1], str[0]);
+  const addMonth = date.setMonth(date.getMonth() + req.body.noMonth - 1);
+
+  var dateNew = new Date(addMonth);
+  const expiredDate = dateNew.toLocaleDateString("en-GB");
+  MongoClient.connect(url, function (err, client) {
+    assert.equal(null, err);
+    const db = client.db(dbName);
+    const col = db.collection("tenant");
+    const { licenseId, licenseName } = req.body;
+    const idUser = req.userId;
+    // Modify and return the modified document
+    db.collection("license")
+      .find({ _id: objectId(licenseId) })
+      .toArray(function (err, docs) {
+        const storageMax = docs[0].storageSize;
+        col.findOneAndUpdate(
+          { createdBy: objectId(idUser) },
+          {
+            $set: {
+              licenseName: licenseName,
+              licenseId: licenseId,
+              storageMax: storageMax,
+              boughtDate: dateNow,
+              expiredDate: expiredDate,
+              lastModifiedBy: req.userId,
+              lastModifiedDate: dateNow,
+            },
+          },
+          { upsert: false },
+          function (err, r) {
+            assert.equal(null, err);
+            res.json({ errorCode: null, data: true });
+          }
+        );
+      });
+  });
+  // console.log(date);
+  // console.log("idTenant", req.body.licenseId);
+  // console.log("name", req.body.licenseName);
+
+  // console.log("dateNew", req.body.noMonth);
+});
 // /* DELETE category. */
 // router.delete("/:id", verifyToken, function (req, res, next) {
 //   //Use connect method to connect to the Server

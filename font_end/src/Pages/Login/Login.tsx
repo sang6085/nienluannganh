@@ -78,6 +78,7 @@ const Login: React.FC = () => {
 			window.localStorage.setItem('token', response.data.accessToken || '');
 			const token: any = response.data.accessToken;
 			const checkToken: any = jwtDecode(token);
+
 			if (checkToken.isAdmin) {
 				history.push(`${AppURL.USER}`);
 			} else {

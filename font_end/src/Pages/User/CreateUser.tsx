@@ -260,11 +260,11 @@ const CreateUser: React.FC<CreateUserProps> = (props) => {
 									name="expiredDate"
 									defaultValue={
 										new Date(
-											new Date().toLocaleDateString('en-GB').substring(6, 10) +
+											props.valueEdit.expiredDate.substring(6, 10) +
 												'-' +
-												new Date().toLocaleDateString('en-GB').substring(3, 5) +
+												props.valueEdit.expiredDate.substring(3, 5) +
 												'-' +
-												new Date().toLocaleDateString('en-GB').substring(0, 2)
+												props.valueEdit.expiredDate.substring(0, 2)
 										)
 									}
 									render={({ field: { onChange, value } }) => (

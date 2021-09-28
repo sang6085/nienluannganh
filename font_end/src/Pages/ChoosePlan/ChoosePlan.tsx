@@ -16,6 +16,10 @@ import { LicenseGet } from '../../Api/License';
 import ChoosePlanBox from '../../Components/ChoosePlanBox/ChoosePlanBox';
 import theme from '../../utils/theme';
 import { Close } from '@material-ui/icons';
+import { TenantBuy } from '../../Api/TenantAPI';
+import Swal from 'sweetalert2';
+import { useHistory } from 'react-router';
+import { AppURL } from '../../utils/const';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -57,8 +61,25 @@ const ChoosePlan: React.FC = () => {
 	const handleClose = () => {
 		setOpen(false);
 	};
-	const onClick = () => {
-		setOpen(true);
+	const history = useHistory();
+	const onClick = async (item: any) => {
+		//setOpen(true);
+		//console.log(item);
+
+		const response = await TenantBuy({
+			licenseId: item.id,
+			noMonth: item.noMonth,
+			licenseName: item.name,
+		});
+		if (response) {
+			if (response.errorCode === null) {
+				Swal.fire({
+					icon: 'success',
+					title: `Bạn đã mua thành công gói license ${item.noMonth} thang`,
+				});
+				history.push(AppURL.DASHBOARD);
+			}
+		}
 	};
 	return (
 		<>
@@ -88,7 +109,7 @@ const ChoosePlan: React.FC = () => {
 										price={item.price}
 										title={item.name}
 										capacity={prettyBytes(item.storageSize)}
-										onClick={onClick}
+										onClick={() => onClick(item)}
 									/>
 								</Grid>
 							)
