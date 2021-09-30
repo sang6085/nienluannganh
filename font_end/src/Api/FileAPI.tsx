@@ -1,13 +1,9 @@
 import { callApi } from './Api';
 
-export const FilePost = (
-	file: any,
-	idFolder: any,
-	onUploadProgress?: (progressEvent: any) => void
-) => {
+export const FilePost = (file: any, data: any, onUploadProgress?: (progressEvent: any) => void) => {
 	const response = callApi(
 		'POST',
-		`/api/v3/file?idFolder=${idFolder}`,
+		`/api/v3/file?idFolder=${data.idFolder}&userId=${data.userId}`,
 		file,
 		true,
 		false,
@@ -21,14 +17,14 @@ export const FilePost = (
 export const FileGet = (params: any) => {
 	const response = callApi(
 		'GET',
-		`/api/v3/file/select_list?parentId=${params.parentId}&page=${params.page}&pageSize=${params.pageSize}&search=${params.search}`
+		`/api/v3/file/select_list?parentId=${params.parentId}&page=${params.page}&pageSize=${params.pageSize}&search=${params.search}&userId=${params.userId}`
 	).then((res) => {
 		return res;
 	});
 	return response;
 };
-export const FileGetAll = (parentId: any) => {
-	const response = callApi('GET', `/api/v3/file/get_all?parentId=${parentId}`).then((res) => {
+export const FileGetAll = (data: any) => {
+	const response = callApi('POST', '/api/v3/file/get_all', data).then((res) => {
 		return res;
 	});
 	return response;
@@ -39,17 +35,17 @@ export const RenameFilePost = (data: any) => {
 	});
 	return response;
 };
-export const FileDelete = (id: string) => {
-	const response = callApi('DELETE', `/api/v3/file/${id}`).then((res) => {
+export const FileDelete = (data: any) => {
+	const response = callApi('POST', '/api/v3/file/delete', data).then((res) => {
 		return res;
 	});
 	return response;
 };
-export const DownloadGet = (id: string, onDownloadProgress?: (progressEvent: any) => void) => {
+export const DownloadGet = (data: any, onDownloadProgress?: (progressEvent: any) => void) => {
 	const response = callApi(
-		'GET',
-		`/api/v3/file/download/${id}`,
-		null,
+		'POST',
+		'/api/v3/file/download',
+		data,
 		true,
 		true,
 		undefined,

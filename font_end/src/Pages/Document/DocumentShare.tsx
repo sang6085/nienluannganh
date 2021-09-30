@@ -43,8 +43,10 @@ import {
 	FolderDelete,
 	FolderGet,
 	ShareFolderPost,
+	ShareGet,
 	ShareToGet,
 	TreeviewGet,
+	UserIdGet,
 } from '../../Api/FolderAPI';
 import CustomizedDialogs from '../../Components/Dialog/CustomizedDialogs';
 import CreateDocument from './CreateDocument';
@@ -57,6 +59,7 @@ import prettyBytes from 'pretty-bytes';
 import { toast, ToastContainer } from 'react-toastify';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import ShareFolder from './ShareFolder';
+import { ProfileGet } from '../../Api/ProfileAPI';
 const useStyles = makeStyles((theme: Theme) => ({
 	click: {
 		backgroundColor: '#e3f2fd',
@@ -73,7 +76,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 		display: 'inline-block',
 	},
 }));
-const Document: React.FC = () => {
+
+const DocumentShare: React.FC = () => {
 	const { t } = useTranslation();
 	const classes = useStyles();
 	const [styleOnClick, setStyleOnClick] = React.useState<any>({ open: false, id: -1 });
@@ -96,7 +100,6 @@ const Document: React.FC = () => {
 		id: 0,
 		parentId: 0,
 		name: '',
-		userId: 0,
 	});
 	const [dataFolder, setDataFolder] = React.useState<any>([]);
 	const [dataFile, setDataFile] = React.useState<any>([]);
@@ -109,30 +112,77 @@ const Document: React.FC = () => {
 			setFlagRenameFile(false);
 		}
 	};
+	const [loginName, setLoginName] = React.useState('');
+	const [userid, setUserid] = React.useState('');
 	React.useEffect(() => {
 		const getDataFolder = async () => {
-			const params = {
-				search: '',
-				page: 0,
-				pageSize: 100,
-				parentId: id,
-				userId: 0,
-			};
-			setValue({ id: 0, name: '', parentId: id, userId: 0 });
-			const response = await FolderGet(params);
-			const responseFile = await FileGet(params);
+			const response = await ProfileGet();
+			if (response?.errorCode === null) {
+				setLoginName(response.data.loginName);
+			}
+			if (id == '0') {
+				setDataFile([]);
+				const responseDataFolder = await ShareGet(loginName);
+				if (responseDataFolder) {
+					if (responseDataFolder.errorCode === null) {
+						console.log(responseDataFolder.data);
+						const dataNew = responseDataFolder.data?.map((item: any) => {
+							return {
+								id: item.idFolder,
+								name: item.folderName,
+								sharedBy: item.createdBy,
+								shared: true,
+							};
+						});
+						setDataFolder(dataNew);
+					}
+				}
+			} else {
+				const responseDataFolder = await ShareGet(loginName);
 
-			if (responseFile.errorCode === null) {
-				setDataFile(responseFile.data.listData);
+				if (responseDataFolder) {
+					if (responseDataFolder.errorCode === null) {
+						let userId = '';
+						responseDataFolder.data?.map((item: any) => {
+							if (item.idFolder === id) {
+								userId = item.createdBy;
+							}
+						});
+						if (id != '0') {
+							const responseUserId = await UserIdGet(id);
+							if (responseUserId) {
+								if (responseUserId.errorCode === null) {
+									userId = responseUserId.data[0].createdBy;
+									setUserid(userId);
+								}
+							}
+						}
+
+						const params = {
+							search: '',
+							page: 0,
+							pageSize: 100,
+							parentId: id,
+							userId: userId,
+						};
+						setValue({ id: 0, name: '', parentId: id });
+						const response = await FolderGet(params);
+						const responseFile = await FileGet(params);
+						if (responseFile.errorCode === null) {
+							setDataFile(responseFile.data.listData);
+						}
+						if (response.errorCode === null) {
+							setDataFolder(response.data.listData);
+						}
+					}
+				}
+
+				// const fetchTreview = await TreeviewGet(id);
+				// console.log(fetchTreview);
 			}
-			if (response.errorCode === null) {
-				setDataFolder(response.data.listData);
-			}
-			// const fetchTreview = await TreeviewGet(id);
-			// console.log(fetchTreview);
 		};
 		getDataFolder();
-	}, [id, flagFolder]);
+	}, [id, flagFolder, loginName]);
 	const [openDialog, setOpenDialog] = React.useState(false);
 	const [showCreateFolder, setShowCreateFolder] = React.useState(false);
 	const [titleDialog, setTitleDialog] = React.useState('new_folder');
@@ -141,12 +191,12 @@ const Document: React.FC = () => {
 	};
 	const handleCreateFolder = () => {
 		setOpenDialog(true);
-		setValue({ id: 0, name: '', parentId: id, userId: 0 });
+		setValue({ id: 0, name: '', parentId: id, userId: userid });
 		setShowCreateFolder(true);
 	};
 	const history = useHistory();
 	const onDoubleClick = (e: any, data: any) => {
-		history.push(`/document/${data.id}`);
+		history.push(`/share/document/${data.id}`);
 	};
 	const renameFolder = (item: any) => {
 		setAnchorEl(null);
@@ -183,12 +233,13 @@ const Document: React.FC = () => {
 			cancelButtonColor: '#d33',
 		}).then(async (result) => {
 			if (result.isConfirmed) {
-				const response = await FolderDelete({ id: item.id, userId: 0 });
-				const response1 = await FileGetAll({ parentId: item.id, userId: 0 });
+				const response = await FolderDelete({ id: item.id, userId: item.createdBy });
+				const response1 = await FileGetAll({ parentId: item.id, userId: item.createdBy });
 				//const responseFolder = await FolderGet(item.id);
+
 				if (response1.data.length !== 0) {
 					response1.data.map((item: any) => {
-						FileDelete({ id: item._id, userId: 0 });
+						FileDelete({ id: item._id, userId: item.createdBy });
 					});
 				}
 				if (response.errorCode === null) {
@@ -217,7 +268,7 @@ const Document: React.FC = () => {
 			cancelButtonColor: '#d33',
 		}).then(async (result) => {
 			if (result.isConfirmed) {
-				const response = await FileDelete({ id: item.id, userId: 0 });
+				const response = await FileDelete({ id: item.id, userId: item.createdBy });
 				if (response.errorCode === null) {
 					Swal.fire(
 						t('confirmDelete.deleted'),
@@ -237,6 +288,7 @@ const Document: React.FC = () => {
 		setOpenDialog(true);
 		setValue({ id: item.id, name: item.name });
 		setFlagRenameFile(true);
+		setShowCreateFolder(true);
 	};
 
 	const [flagUpload, setFlagUpload] = React.useState(false);
@@ -265,7 +317,7 @@ const Document: React.FC = () => {
 					fileSize: ` ${prettyBytes(loaded)} / ${prettyBytes(total)}`,
 				});
 			};
-			const response = await FilePost(formData, { idFolder: id, userId: 0 }, onUploadProgress);
+			const response = await FilePost(formData, { idFolder: id, userId: userid }, onUploadProgress);
 
 			if (response.errorCode === null) {
 				acceptedFiles.splice(i, 1);
@@ -324,7 +376,7 @@ const Document: React.FC = () => {
 				fileSize: ` ${prettyBytes(loaded)} / ${prettyBytes(total)}`,
 			});
 		};
-		const response = await DownloadGet({ id: item.id, userId: 0 }, onDownloadProgress);
+		const response = await DownloadGet({ id: item.id, userId: item.createdBy }, onDownloadProgress);
 		const url = window.URL.createObjectURL(new Blob([response]));
 		const link = document.createElement('a');
 		link.href = url;
@@ -338,7 +390,6 @@ const Document: React.FC = () => {
 	const [viewFile, setViewFile] = React.useState({ title: '', link: '', end: '' });
 	const onDoubleClickFile = async (e: any, item: any) => {
 		setOpenViewFile(true);
-		console.log();
 
 		setViewFile({
 			title: item.name,
@@ -369,30 +420,32 @@ const Document: React.FC = () => {
 	};
 	return (
 		<Grid container spacing={2}>
-			<Grid item xs={12} style={{ textAlign: 'end' }}>
-				<Button
-					variant="contained"
-					color="default"
-					className={classes.button}
-					startIcon={<CreateNewFolderIcon />}
-					onClick={handleCreateFolder}
-				>
-					{t('document.create_folder')}
-				</Button>
-				&nbsp; &nbsp;&nbsp;&nbsp;
-				<div {...getRootProps({ className: classes.divDropzone })}>
-					<input {...getInputProps()} />
+			{id != '0' && (
+				<Grid item xs={12} style={{ textAlign: 'end' }}>
 					<Button
 						variant="contained"
 						color="default"
 						className={classes.button}
-						startIcon={<CloudUploadIcon />}
-						onClick={open}
+						startIcon={<CreateNewFolderIcon />}
+						onClick={handleCreateFolder}
 					>
-						{t('document.upload_file')}
+						{t('document.create_folder')}
 					</Button>
-				</div>
-			</Grid>
+					&nbsp; &nbsp;&nbsp;&nbsp;
+					<div {...getRootProps({ className: classes.divDropzone })}>
+						<input {...getInputProps()} />
+						<Button
+							variant="contained"
+							color="default"
+							className={classes.button}
+							startIcon={<CloudUploadIcon />}
+							onClick={open}
+						>
+							{t('document.upload_file')}
+						</Button>
+					</div>
+				</Grid>
+			)}
 			{flagUpload && (
 				<Grid item xs={12}>
 					{showFiles}
@@ -415,7 +468,9 @@ const Document: React.FC = () => {
 						onDoubleClick={(e) => onDoubleClick(e, item)}
 					>
 						<ListItem>
-							<ListItemIcon>{item.shared ? <FolderSharedIcon /> : <FolderIcon />}</ListItemIcon>
+							<ListItemIcon>
+								{item.shared ? <FolderSharedIcon /> : <FolderSharedIcon />}
+							</ListItemIcon>
 							<Typography component="h6" style={{ cursor: 'default' }} noWrap>
 								{item.name}
 							</Typography>
@@ -586,4 +641,4 @@ const Document: React.FC = () => {
 		</Grid>
 	);
 };
-export default Document;
+export default DocumentShare;

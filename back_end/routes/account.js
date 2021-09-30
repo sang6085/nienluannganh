@@ -116,7 +116,7 @@ router.post("/login", function (req, res, next) {
         const accessToken = jwt.sign(
           { userId: docs[0]._id, isAdmin: docs[0].isAdmin },
           process.env.ACCESS_TOKEN_SECRET,
-          { expiresIn: "3600s" }
+          { expiresIn: "28800s" }
         );
         res.json({ errorCode: null, data: { accessToken } });
       });
@@ -194,6 +194,21 @@ router.delete("/:id", verifyToken, function (req, res, next) {
     const db = client.db(dbName);
     const col = db.collection("account");
     // Remove and return a document
+    db.collection("account")
+      .find({
+        _id: objectId(req.params.id),
+        deletedBy: 0,
+      })
+      .toArray((err, docs) => {
+        db.collection("share").updateMany(
+          { shareTo: docs[0].loginName, deletedBy: 0 },
+          { $set: { deletedBy: req.userId, deletedDate: date } },
+          { upsert: false },
+          function (err, r) {
+            assert.equal(null, err);
+          }
+        );
+      });
     db.collection("tenant").findOneAndUpdate(
       { createdBy: objectId(req.params.id) },
       { $set: { deletedBy: req.userId, deletedDate: date } },

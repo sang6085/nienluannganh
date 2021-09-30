@@ -95,7 +95,6 @@ router.post("/post", verifyToken, function (req, res, next) {
   const str = dateNow.split("/");
   const date = new Date(str[2], str[1], str[0]);
   const addMonth = date.setMonth(date.getMonth() + req.body.noMonth - 1);
-
   var dateNew = new Date(addMonth);
   const expiredDate = dateNew.toLocaleDateString("en-GB");
   MongoClient.connect(url, function (err, client) {

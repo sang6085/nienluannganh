@@ -11,48 +11,41 @@ const dbName = "fileManager";
 router.use(express.json());
 /* GET home page. */
 router.get("/select_list", verifyToken, function (req, res, next) {
-  // Use connect method to connect to the Server
-  const { page, pageSize, search, parentId } = req.query;
-  const userId = req.query.userId == 0 ? req.userId : req.query.userId;
+  const { name } = req.query;
   MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
     const db = client.db(dbName);
-    const col = db.collection("folder");
+    const col = db.collection("share");
     // Get first two documents that match the query
-    let totalCount = 0;
     col
       .find({
-        createdBy: userId,
+        shareTo: name,
         deletedBy: 0,
-        parentId: parentId == 0 ? "0" : parentId,
       })
       .toArray(function (err, docs) {
         assert.equal(null, err);
-        // console.log(docs.length);
-        totalCount = docs.length;
+        res.json({ errorCode: null, data: docs });
       });
-
+  });
+});
+router.get("/shareTo/select_list", verifyToken, function (req, res, next) {
+  // Use connect method to connect to the Server
+  const { idFolder } = req.query;
+  MongoClient.connect(url, function (err, client) {
+    assert.equal(null, err);
+    const db = client.db(dbName);
+    const col = db.collection("share");
+    // Get first two documents that match the query
     col
       .find({
-        name: { $regex: search ? search.trim() : "", $options: "i" },
-        createdBy: userId,
+        createdBy: req.userId,
         deletedBy: 0,
-        parentId: parentId == 0 ? "0" : parentId,
+        idFolder: idFolder,
       })
-      .limit(Number(pageSize))
-      .skip(Number(pageSize * page))
       .toArray(function (err, docs) {
         assert.equal(null, err);
-        // console.log(docs.length);
-        const data = docs.map((item) => {
-          return {
-            id: item._id,
-            name: item.name,
-            shared: item.shared,
-            createdBy: item.createdBy,
-          };
-        });
-        res.json({ errorCode: null, data: { totalCount, listData: data } });
+
+        res.json({ errorCode: null, data: docs });
         client.close();
       });
   });
@@ -79,93 +72,77 @@ router.get("/select_list", verifyToken, function (req, res, next) {
 /* POST folder. */
 router.post("/", verifyToken, function (req, res, next) {
   // Use connect method to connect to the Server
-  //console.log(new Date());
-  const userId = req.body.userId == 0 ? req.userId : req.body.userId;
   var date = new Date().toLocaleDateString("en-GB");
   MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
     const db = client.db(dbName);
     const col = db.collection("folder");
-    if (req.body.id === undefined || req.body.id == 0) {
-      const createData = {
-        name: req.body.name,
-        parentId:
-          req.body.parentId === undefined || req.body.parentId === 0
-            ? 0
-            : req.body.parentId,
-        createdBy: userId,
-        createdDate: date,
-        shared: false,
-        lastModifiedBy: 0,
-        lastModifiedDate: 0,
-        deletedBy: 0,
-        deletedDate: 0,
-      };
-
-      col.insert(createData, function (err, r) {
+    db.collection("share")
+      .find({
+        idFolder: req.body.idFolder,
+        shareTo: req.body.name,
+        deletedBy: 0
+      })
+      .toArray(function (err, docs) {
         assert.equal(null, err);
-        res.json({ errorCode: null, data: true });
-      });
-    } else {
-      // Modify and return the modified document
-      col.findOneAndUpdate(
-        { _id: objectId(req.body.id) },
-        {
-          $set: {
-            name: req.body.name,
-            lastModifiedBy: userId,
-            lastModifiedDate: date,
-          },
-        },
-        { upsert: false },
-        function (err, r) {
-          assert.equal(null, err);
+
+        if (docs.length === 0) {
+          db.collection("share").insert(
+            {
+              idFolder: req.body.idFolder,
+              shareTo: req.body.name,
+              folderName: req.body.folderName,
+              createdBy: req.userId,
+              createdDate: date,
+              lastModifiedBy: 0,
+              lastModifiedDate: 0,
+              deletedBy: 0,
+              deletedDate: 0,
+            },
+            function (err, r) {
+              assert.equal(null, err);
+            }
+          );
         }
-      );
-      res.json({ errorCode: null, data: true });
-    }
+      });
+
+    // Modify and return the modified document
+    col.findOneAndUpdate(
+      { _id: objectId(req.body.idFolder) },
+      {
+        $set: {
+          shared: true,
+        },
+      },
+      { upsert: false },
+      function (err, r) {
+        assert.equal(null, err);
+      }
+    );
+
+    res.json({ errorCode: null, data: true });
   });
 });
 /* DELETE category. */
 router.post("/delete", verifyToken, function (req, res, next) {
   //Use connect method to connect to the Server
   var date = new Date().toLocaleDateString("en-GB");
-  const userId = req.body.userId == 0 ? req.userId : req.body.userId;
+  const { idFolder, name } = req.body;
   MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
     const db = client.db(dbName);
-    const col = db.collection("folder");
+    const col = db.collection("share");
     // Remove and return a document
 
-    col.findOneAndUpdate(
-      { _id: objectId(req.body.id) },
-      { $set: { deletedBy: userId, deletedDate: date } },
+    col.updateMany(
+      { idFolder: idFolder, deletedBy: 0, shareTo: name },
+      { $set: { deletedBy: req.userId, deletedDate: date } },
       { upsert: false },
       function (err, r) {
         assert.equal(null, err);
       }
     );
     res.json({ errorCode: null, data: true });
-  });
-});
-router.get("/getUserId", verifyToken, function (req, res, next) {
-  //Use connect method to connect to the Server
-  var date = new Date().toLocaleDateString("en-GB");
-
-  MongoClient.connect(url, function (err, client) {
-    assert.equal(null, err);
-    const db = client.db(dbName);
-    const col = db.collection("folder");
-    // Remove and return a document
-    col
-      .find({
-        deletedBy: 0,
-        _id: objectId(req.query.folderId),
-      })
-      .toArray(function (err, docs) {
-        assert.equal(null, err);
-        res.json({ errorCode: null, data: docs });
-      });
   });
 });
 router.get("/treeview/:id", verifyToken, function (req, res, next) {

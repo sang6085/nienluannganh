@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, LinearProgress, TextField } from '@material-ui/core';
+import { Button, Chip, LinearProgress, TextField } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,10 +13,12 @@ import { useTranslation } from 'react-i18next';
 import SaveIcon from '@material-ui/icons/Save';
 import * as yup from 'yup';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { FolderPost } from '../../Api/FolderAPI';
+import { FolderPost, ShareDeletePost, ShareFolderPost } from '../../Api/FolderAPI';
 import { RenameFilePost } from '../../Api/FileAPI';
 import Message from '../../Notifi/Message';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
+import { Stack } from '@mui/material';
 
 const Copyright = () => {
 	return (
@@ -67,7 +69,7 @@ interface CreateDocumentProps {
 	value?: any;
 	flagRenameFile?: boolean;
 }
-const CreateDocument: React.FC<CreateDocumentProps> = (props) => {
+const ShareFolder: React.FC<CreateDocumentProps> = (props) => {
 	const classes = useStyles();
 	const [tr] = useTranslation();
 	const closeDialog = props.closeDialog;
@@ -75,36 +77,24 @@ const CreateDocument: React.FC<CreateDocumentProps> = (props) => {
 	const createNameCategory = React.useRef<HTMLInputElement>(null);
 	//const createDescriptionCategory = React.useRef<HTMLInputElement>(null);
 
-	const handleCancel = () => {
-		props.closeDialog?.(true);
-	};
 	const onSubmit = async (data: any) => {
-		const dataReq = {
-			id: data.id,
-			parentId: data.parentId,
+		const response = await ShareFolderPost({
+			idFolder: data.id,
 			name: data.name,
-			userId: props.value.userId,
-		};
-		if (props.flagRenameFile) {
-			const post = await RenameFilePost(data);
-			if (post?.errorCode === null) {
-				props?.flag?.(true);
-				toast.info(tr('tenant.updated_successfully'));
+			folderName: props.value.folderName,
+		});
+		if (response) {
+			if (response.errorCode === null) {
+				Swal.fire({
+					icon: 'success',
+					title: `Bạn đã chia sẻ thành công đến ${data.name}`,
+				});
+				props.flag?.(true);
 			} else {
-				console.log('that bai');
-				toast.error('error');
-			}
-		} else {
-			const post = await FolderPost(dataReq);
-			if (post?.errorCode === null) {
-				if (data.id === 0) {
-					toast.info(tr('tenant.created_successfully'));
-				} else {
-					toast.info(tr('tenant.updated_successfully'));
-				}
-				props?.flag?.(true);
-			} else {
-				console.log('that bai');
+				Swal.fire({
+					icon: 'error',
+					title: 'Có lỗi xảy ra',
+				});
 			}
 		}
 	};
@@ -116,11 +106,28 @@ const CreateDocument: React.FC<CreateDocumentProps> = (props) => {
 	const {
 		control,
 		handleSubmit,
+		register,
 		formState: { errors, isSubmitting },
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
-
+	const handleDelete = async (item: any) => {
+		const response = await ShareDeletePost({ idFolder: item.idFolder, name: item.shareTo });
+		if (response) {
+			if (response.errorCode === null) {
+				Swal.fire({
+					icon: 'success',
+					title: 'Xoa thanh cong',
+				});
+				props.flag?.(true);
+			} else {
+				Swal.fire({
+					icon: 'error',
+					title: 'Có lỗi xảy ra',
+				});
+			}
+		}
+	};
 	return (
 		<Container component="main" maxWidth="xs">
 			<Message />
@@ -155,24 +162,18 @@ const CreateDocument: React.FC<CreateDocumentProps> = (props) => {
 								/>
 							)}
 						/>
-						<Controller
-							control={control}
+						<TextField
+							{...register('name')}
+							variant="outlined"
+							disabled={false}
+							label="Nhap ten nguoi chia se"
+							type="text"
+							id="name"
 							name="name"
-							defaultValue={props.value.name}
-							render={({ field: { onChange } }) => (
-								<TextField
-									onChange={(e) => onChange(e.target.value)}
-									variant="outlined"
-									fullWidth
-									name="name"
-									id="name"
-									defaultValue={props.value.name}
-									label={tr('createCategory.name')}
-									inputRef={createNameCategory}
-									error={errors.name ? true : false}
-									helperText={errors.name?.message}
-								/>
-							)}
+							placeholder="Nhap ten nguoi chia se"
+							fullWidth={true}
+							error={errors.name ? true : false}
+							helperText={errors.name?.message}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -189,12 +190,26 @@ const CreateDocument: React.FC<CreateDocumentProps> = (props) => {
 						<Button
 							variant="contained"
 							color="secondary"
+							onClick={() => props.closeDialog?.(true)}
 							//className={classes.button}
 							startIcon={<CancelIcon />}
-							onClick={handleCancel}
 						>
 							{tr('document.cancel')}
 						</Button>
+					</Grid>
+					<Grid item xs={12}>
+						<Stack direction="row" spacing={1}>
+							{props.value.name &&
+								props?.value?.name?.map((item: any) => {
+									return (
+										<Chip
+											label={item.shareTo}
+											variant="outlined"
+											onDelete={() => handleDelete(item)}
+										/>
+									);
+								})}
+						</Stack>
 					</Grid>
 				</Grid>
 			</form>
@@ -205,4 +220,4 @@ const CreateDocument: React.FC<CreateDocumentProps> = (props) => {
 		</Container>
 	);
 };
-export default CreateDocument;
+export default ShareFolder;

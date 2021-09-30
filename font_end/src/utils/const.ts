@@ -9,4 +9,5 @@ export const AppURL = {
 	LICENSE: '/license',
 	TENANT: '/tenant',
 	USER: '/user',
+	SHARE: '/share/document/:id',
 };

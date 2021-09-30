@@ -13,8 +13,9 @@ const dbName = "fileManager";
 router.use(express.json());
 /* GET home page. */
 router.use(fileUpload());
-router.get("/download/:id", verifyToken, function (req, res, next) {
+router.post("/download", verifyToken, function (req, res, next) {
   // Use connect method to connect to the Server
+  const userId = req.body.userId == 0 ? req.userId : req.body.userId;
   MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
     const db = client.db(dbName);
@@ -22,15 +23,15 @@ router.get("/download/:id", verifyToken, function (req, res, next) {
     // Get first two documents that match the query
     col
       .find({
-        _id: objectId(req.params.id),
-        createdBy: req.userId,
+        _id: objectId(req.body.id),
+        createdBy: userId,
         deletedBy: 0,
       })
       .toArray(function (err, docs) {
         assert.equal(null, err);
         res.download(
           `./../back_end/public/upload/${
-            req.params.id +
+            req.body.id +
             docs[0].name.substring(
               docs[0].name.lastIndexOf("."),
               docs[0].name.length
@@ -45,6 +46,7 @@ router.get("/download/:id", verifyToken, function (req, res, next) {
 router.get("/select_list", verifyToken, function (req, res, next) {
   // Use connect method to connect to the Server
   const { page, pageSize, search, parentId } = req.query;
+  const userId = req.query.userId == 0 ? req.userId : req.query.userId;
   MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
     const db = client.db(dbName);
@@ -53,7 +55,7 @@ router.get("/select_list", verifyToken, function (req, res, next) {
     let totalCount = 0;
     col
       .find({
-        createdBy: req.userId,
+        createdBy: userId,
         deletedBy: 0,
         idFolder: parentId == 0 ? Number(parentId) : parentId,
       })
@@ -66,7 +68,7 @@ router.get("/select_list", verifyToken, function (req, res, next) {
     col
       .find({
         name: { $regex: search ? search.trim() : "", $options: "i" },
-        createdBy: req.userId,
+        createdBy: userId,
         deletedBy: 0,
         idFolder: parentId == 0 ? Number(parentId) : parentId,
       })
@@ -81,6 +83,7 @@ router.get("/select_list", verifyToken, function (req, res, next) {
             name: item.name,
             size: item.size,
             type: item.type,
+            createdBy: item.createdBy,
           };
         });
         res.json({ errorCode: null, data: { totalCount, listData: data } });
@@ -89,9 +92,10 @@ router.get("/select_list", verifyToken, function (req, res, next) {
   });
 });
 /* GET home page. */
-router.get("/get_all", verifyToken, function (req, res, next) {
+router.post("/get_all", verifyToken, function (req, res, next) {
   // Use connect method to connect to the Server
-  const { parentId } = req.query;
+  const { parentId } = req.body;
+  const userId = req.body.userId == 0 ? req.userId : req.body.userId;
   MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
     const db = client.db(dbName);
@@ -99,7 +103,7 @@ router.get("/get_all", verifyToken, function (req, res, next) {
     // Get first two documents that match the query
     col
       .find({
-        createdBy: req.userId,
+        createdBy: userId,
         deletedBy: 0,
         idFolder: parentId == 0 ? Number(parentId) : parentId,
       })
@@ -123,6 +127,7 @@ router.get("/get_all", verifyToken, function (req, res, next) {
 //   const upload = multer({ storage: storage }).single("file");
 router.post("/", verifyToken, function (req, res, next) {
   // Use connect method to connect to the Server
+  const userId = req.query.userId == 0 ? req.userId : req.query.userId;
   //console.log(new Date());
   const file = req.files.file;
   var date = new Date().toLocaleDateString("en-GB");
@@ -131,7 +136,7 @@ router.post("/", verifyToken, function (req, res, next) {
     const db = client.db(dbName);
     const col = db.collection("file");
     db.collection("tenant")
-      .find({ createdBy: objectId(req.userId) })
+      .find({ createdBy: objectId(userId) })
       .toArray(function (err, docs) {
         assert.equal(null, err);
         const storageMax = docs[0].storageMax;
@@ -143,7 +148,8 @@ router.post("/", verifyToken, function (req, res, next) {
           idFolder: req.query.idFolder == 0 ? 0 : req.query.idFolder,
           type: file.mimetype,
           size: file.size,
-          createdBy: req.userId,
+          shared: false,
+          createdBy: userId,
           createdDate: date,
           lastModifiedBy: 0,
           lastModifiedDate: 0,
@@ -162,12 +168,12 @@ router.post("/", verifyToken, function (req, res, next) {
               if (err)
                 return res.status(500).json({ errorCode: 11, data: null });
               db.collection("tenant")
-                .find({ createdBy: objectId(req.userId) })
+                .find({ createdBy: objectId(userId) })
                 .toArray(function (err, docs) {
                   assert.equal(null, err);
                   const storageUsed = docs[0].storageUsed;
                   db.collection("tenant").findOneAndUpdate(
-                    { createdBy: objectId(req.userId) },
+                    { createdBy: objectId(userId) },
                     { $set: { storageUsed: storageUsed + file.size } },
                     { upsert: false },
                     function (err, r) {
@@ -211,7 +217,7 @@ router.post("/rename", verifyToken, function (req, res, next) {
   });
 });
 /* DELETE category. */
-router.delete("/:id", verifyToken, function (req, res, next) {
+router.post("/delete", verifyToken, function (req, res, next) {
   //Use connect method to connect to the Server
   var date = new Date().toLocaleDateString("en-GB");
   MongoClient.connect(url, function (err, client) {
@@ -219,24 +225,25 @@ router.delete("/:id", verifyToken, function (req, res, next) {
     const db = client.db(dbName);
     const col = db.collection("file");
     // Remove and return a document
+    const userId = req.body.userId == 0 ? req.userId : req.body.userId;
 
     col.findOneAndUpdate(
-      { _id: objectId(req.params.id) },
-      { $set: { deletedBy: req.userId, deletedDate: date } },
+      { _id: objectId(req.body.id) },
+      { $set: { deletedBy: userId, deletedDate: date } },
       { upsert: false },
       function (err, r) {
         assert.equal(null, err);
         db.collection("file")
-          .find({ _id: objectId(req.params.id) })
+          .find({ _id: objectId(req.body.id) })
           .toArray(function (err, docs) {
             const size = docs[0].size;
             db.collection("tenant")
-              .find({ createdBy: objectId(req.userId) })
+              .find({ createdBy: objectId(userId) })
               .toArray(function (err, docs) {
                 assert.equal(null, err);
                 const storageUsed = docs[0].storageUsed;
                 db.collection("tenant").findOneAndUpdate(
-                  { createdBy: objectId(req.userId) },
+                  { createdBy: objectId(userId) },
                   { $set: { storageUsed: storageUsed - size } },
                   { upsert: false },
                   function (err, r) {

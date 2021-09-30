@@ -2,14 +2,14 @@ POST http://localhost:9000/api/v3/account/login
 Content-Type: application/json
 
 {
-    "loginName": "sang2@gmail",
+    "loginName": "sangg@gmail",
     "password": "123"
 }
 
 ###
 
-GET http://localhost:9000/api/v3/account/select_list?page=0&pageSize=15&search
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTI3NzdiMTc4NWE2NDg1ZGJmZDZjMjMiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjMwMTUyODA0LCJleHAiOjE2MzAxNTY0MDR9.HvMFalQ2XdbCO8hjCNsYJOjQu9j1fl6IDn0yxuR4Eag
+GET http://localhost:9000/api/v3/shared/document/select_list?name=sangg@gmail
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTU0OGI2ZGIwNjE3OGY2NDliZGU4OWQiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjMyOTMwNjgwLCJleHAiOjE2MzI5NTk0ODB9.AU-PtkHUSzS5kLzNOJegVtkRdiwsMUp5RhN_H9cDfEI
 
 
 ###

@@ -56,7 +56,9 @@
 		"category": "Category",
 		"file_manager": "File Manager",
 		"hello": "Hello!",
-		"user": "User"
+		"user": "User",
+		"shared": "Share",
+		"share": "Share"
 	},
 	"sidebar": {
 		"dashboard": "Dashboard",
@@ -88,6 +90,7 @@
 	"createDocument": {
 		"new_folder": "New folder",
 		"name": "Name",
+		"share": "Share",
 		"category": "Category",
 		"rename_folder": "Rename folder",
 		"document_created": "Document Created!",
@@ -189,6 +192,7 @@
 	"tenant": {
 		"search": "Search",
 		"name": "Name",
+		"share": "Share",
 		"login_name": "Login name",
 		"from_date": "From date",
 		"to_date": "To date",

@@ -18,6 +18,7 @@ import ChoosePlanLayout from './Layouts/ChoosePlanLayout/ChoosePlanLayout';
 import User from './Pages/User/User';
 import MainLayoutAdmin from './Layouts/MainLayoutAdmin';
 import License from './Pages/License/License';
+import DocumentShare from './Pages/Document/DocumentShare';
 
 function App() {
 	const theme = createTheme({
@@ -52,12 +53,13 @@ function App() {
 								</Switch>
 							</LoginLayout>
 						</Route>
-						<Route path={[AppURL.DASHBOARD, AppURL.DOCUMENTLIST, AppURL.TENANT]}>
+						<Route path={[AppURL.DASHBOARD, AppURL.DOCUMENTLIST, AppURL.TENANT, AppURL.SHARE]}>
 							<MainLayout>
 								<Switch>
 									<Route path={AppURL.DASHBOARD} component={DashBoard} />
 									<Route path={AppURL.DOCUMENTLIST} component={Document} />
 									<Route path={AppURL.TENANT} component={Tenant} />
+									<Route path={AppURL.SHARE} component={DocumentShare} />
 								</Switch>
 							</MainLayout>
 						</Route>

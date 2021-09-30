@@ -28,6 +28,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import GroupIcon from '@mui/icons-material/Group';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { NavLink, Redirect } from 'react-router-dom';
@@ -147,7 +148,7 @@ const MainLayout: React.FC = (props) => {
 	const items = [
 		{ text: 'dashboard', icon: <DashboardIcon />, url: AppURL.DASHBOARD },
 		{ text: 'document', icon: <AssignmentIcon />, url: '/document/0' },
-		// { text: 'tenant', icon: <PeopleAltIcon />, url: AppURL.TENANT },
+		{ text: 'share', icon: <GroupIcon />, url: '/share/document/0' },
 	];
 	const [item, setItem] = React.useState(icon);
 	const [valueI18n, setValueI18n] = React.useState('en');
@@ -396,17 +397,18 @@ const MainLayout: React.FC = (props) => {
 				open={openDialog}
 				onClose={handleCloseDialog}
 				aria-labelledby="form-dialog-title"
+				fullWidth
 			>
 				<DialogTitle id="form-dialog-title">{t('tenant.profile')}</DialogTitle>
 				<IconButton className={classes.closeButton} onClick={handleCloseDialog}>
 					<Close />
 				</IconButton>
 				<DialogContent>
-					<Typography variant="body2">- Tên đăng nhập: {profile.name}</Typography>
-					<Typography variant="body2">- Tên đăng nhập: {profile.loginName}</Typography>
-					<Typography variant="body2">- Tên license: {profile.licenseName}</Typography>
-					<Typography variant="body2">- Ngày mua: {profile.boughtDate}</Typography>
-					<Typography variant="body2">- Ngày hết hạn: {profile.expiredDate}</Typography>
+					<Typography variant="body1">- Tên đăng nhập: {profile.name}</Typography>
+					<Typography variant="body1">- Tên đăng nhập: {profile.loginName}</Typography>
+					<Typography variant="body1">- Tên license: {profile.licenseName}</Typography>
+					<Typography variant="body1">- Ngày mua: {profile.boughtDate}</Typography>
+					<Typography variant="body1">- Ngày hết hạn: {profile.expiredDate}</Typography>
 				</DialogContent>
 			</Dialog>
 		</Box>

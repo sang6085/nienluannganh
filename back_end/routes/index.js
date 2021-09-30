@@ -15,6 +15,7 @@ const license = require("./license");
 const folder = require("./folder");
 const tenant = require("./tenant");
 const file = require("./file");
+const shared = require("./shared");
 router.use(express.json());
 router.use("/api/v3/account", account);
 router.use("/api/v3/category", category);
@@ -22,9 +23,10 @@ router.use("/api/v3/license", license);
 router.use("/api/v3/folder", folder);
 router.use("/api/v3/tenant", tenant);
 router.use("/api/v3/file", file);
+router.use("/api/v3/shared/document", shared);
 /* GET home page. */
 var schedule = require("node-schedule");
-schedule.scheduleJob({ hour: 0, minute: 33 }, function () {
+schedule.scheduleJob({ hour: 16, minute: 34 }, function () {
   MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
     const db = client.db(dbName);
